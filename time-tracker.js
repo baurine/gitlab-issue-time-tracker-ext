@@ -1,9 +1,38 @@
-let issue_key = ''
-let issue_time_statistics = []
-
+////////////////////////////////////////////////////////////////////
+// utils
 function log(msg) {
   console.log("Time-tracker extension:", msg)
 }
+
+function formatDate(date) {
+  let year = date.getFullYear()
+  let month = date.getMonth() + 1
+  if (month < 10) {
+    month = `0${month}`
+  }
+  let day = date.getDate()
+  if (day < 10) {
+    day = `0${day}`
+  }
+  let hours = date.getHours()
+  if (hours < 10) {
+    hours = `0${hour}`
+  }
+  let mins = date.getMinutes()
+  if (mins < 10) {
+    mins = `0${mins}`
+  }
+  let secs = date.getSeconds()
+  if (secs < 10) {
+    secs = `0${secs}`
+  }
+  return `${year}-${month}-${day} ${hours}:${mins}:${secs}`
+}
+// log(formatDate(new Date()))
+
+////////////////////////////////////////////////////////////////////
+let issue_key = ''
+let issue_time_statistics = []
 
 function main() {
   log("load")
@@ -77,6 +106,8 @@ function showTimeView() {
   }
   timeTrackerContainer.appendChild(clearBtn)
 
+  timeTrackerContainer.appendChild(genTimeList())
+
   let notesContainer = document.querySelector("#notes")
   notesContainer.insertBefore(timeTrackerContainer, notesContainer.lastChild)
 }
@@ -94,10 +125,19 @@ function controlBtnClick(event) {
 
   let obj = {}
   obj[issue_key] = issue_time_statistics
-
   chrome.storage.local.set(obj, function() {
     log("saved")
   })
+}
+
+function genTimeList() {
+  let timeListContainer = document.createElement("ul")
+  issue_time_statistics.forEach(item => {
+    let cell = document.createElement("li")
+    cell.innerHTML = `<p>from: ${item.from}; to: ${item.to}</p>`
+    timeListContainer.appendChild(cell)
+  })
+  return timeListContainer
 }
 
 /////////////////////////////////////////////
