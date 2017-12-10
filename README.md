@@ -1,11 +1,14 @@
 # Gitlab Issue Time Tracker Chrome Extension
 
-A chrome extension to track gitlab issue time.
+A chrome extension to help track gitlab issue time.
+
+![](./art/demo.gif)
+
+[Install from chrome store](https://chrome.google.com/webstore/detail/time-tracker-for-gitlab-i/oopjgpigefbdgfenihhkfggfjmooloia)
 
 ## TODO
 
-- [ ] Show "Start / Stop" button in gitlab issue page
-- [ ] Record time consuming in chrome storage
-- [ ] Display report
-- [ ] Publish to chrome store
-- [ ] Make host configurable
+- [x] Add "Start / Stop" button in gitlab issue page
+- [x] Save data in chrome storage
+- [x] Make host configurable
+- [x] Publish to chrome store
