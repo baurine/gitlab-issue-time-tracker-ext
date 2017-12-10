@@ -45,31 +45,38 @@ function formatSeconds(milli_seconds) {
 }
 
 ////////////////////////////////////////////////////////////////////
-let issue_key = ''
+let issue_key = ""
 let issue_time_statistics = []
 let refresh_handler = null
+let option_key = "available_hosts"
 
 function main() {
   log("load")
+  checkHostAvailable()
+}
 
-  // document.location.[href|origin|host|hostname|protocol|pathname|hash|port]
-  let origin = document.location.origin
-  // TODO: make it configurable
-  if (origin !== "https://gitlab.ekohe.com") {
-    log('mis match origin')
-    return
-  }
-  let pathname = document.location.pathname
-  if (!/\/issues\/\d+/.test(pathname)) {
-    log('mis match pathname')
-    return
-  }
+function checkHostAvailable() {
+  chrome.storage.local.get("available_hosts", function(obj) {
+    let available_hosts = obj[option_key] || []
 
-  let host = document.location.host
-  issue_key = (host + pathname).replace(/\/|\./g, '_')
-  log(issue_key)
+    // document.location.[href|origin|host|hostname|protocol|pathname|hash|port]
+    let origin = document.location.origin
+    if (!available_hosts.includes(origin)) {
+      log(`${origin} is not available`)
+      return
+    }
+    let pathname = document.location.pathname
+    if (!/\/issues\/\d+/.test(pathname)) {
+      log("this is not a issue page")
+      return
+    }
 
-  loadTimeStatis()
+    let host = document.location.host
+    issue_key = (host + pathname).replace(/\/|\./g, '_')
+    log(issue_key)
+
+    loadTimeStatis()
+  })
 }
 
 function loadTimeStatis() {
