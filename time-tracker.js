@@ -47,6 +47,7 @@ function formatSeconds(milli_seconds) {
 ////////////////////////////////////////////////////////////////////
 let issue_key = ''
 let issue_time_statistics = []
+let refresh_handler = null
 
 function main() {
   log("load")
@@ -95,6 +96,9 @@ function showTimeView() {
     timeTrackerContainer.remove()
   }
 
+  // remove refresh handler
+  clearTimeout(refresh_handler)
+
   // add it back
   timeTrackerContainer = document.createElement("div")
   timeTrackerContainer.id = "gitt-container"
@@ -125,6 +129,7 @@ function showTimeView() {
   // refresh btn
   let refreshBtn = document.createElement("button")
   refreshBtn.classList = "btn btn-new btn-inverted"
+  refreshBtn.style.display = "none"
   refreshBtn.innerText = "Refresh"
   refreshBtn.onclick = function() {
     showTimeView()
@@ -168,6 +173,7 @@ function genTimeList() {
     } else {
       text += "now"
       to = new Date()
+      refresh_handler = setTimeout(showTimeView, 60*1000)
     }
     let duration = to.getTime() - from.getTime()
     total += duration
